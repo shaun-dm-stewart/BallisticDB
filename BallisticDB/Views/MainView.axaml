@@ -1,0 +1,80 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:BallisticDB.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="BallisticDB.Views.MainView"
+             x:DataType="vm:MainViewModel"
+             >
+  <Design.DataContext>
+    <!-- This only sets the DataContext for the previewer in an IDE,
+         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+    <vm:MainViewModel />
+  </Design.DataContext>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="auto"/>
+    </Grid.RowDefinitions>
+    <Menu Grid.Row="0">
+      <MenuItem Header="_File">
+        <MenuItem Header="_Save" Command="{Binding Save}"/>
+        <MenuItem Header="_Export" Command="{Binding ExportBallisticsData}"/>
+      </MenuItem>
+      <MenuItem Header="_Help">
+        <MenuItem Header="About"/>
+      </MenuItem>
+    </Menu>
+    <DataGrid
+      Grid.Row="1"
+      Name="RifleGrid"
+      Height="200"
+      VerticalAlignment="Top"
+      ItemsSource="{Binding Rifles}"
+      AutoGenerateColumns="False"
+      SelectedItem="{Binding SelectedRifle}"
+      >
+      <DataGrid.ContextMenu>
+        <ContextMenu>
+          <MenuItem Header="Add Rifle" Command="{Binding AddRifle}"/>
+          <MenuItem Header="Delete Selected Rifle" Command="{Binding RemoveRifle}"/>
+        </ContextMenu>
+      </DataGrid.ContextMenu>
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Rifle Name" Binding="{Binding RifleName}"/>
+        <DataGridTextColumn Header="Scope Height" Binding="{Binding ScopeHeight}"/>
+        <DataGridTextColumn Header="Twist Rate" Binding="{Binding TwistRate}"/>
+        <DataGridTextColumn Header="Zero Distance" Binding="{Binding ZeroDistance}"/>
+        <DataGridTextColumn Header="Elevation clicks per MOA" Binding="{Binding ElevationClicksPerMOA}"/>
+        <DataGridTextColumn Header="Windage clicks per MOA" Binding="{Binding WindageClicksPerMOA}"/>
+      </DataGrid.Columns>
+    </DataGrid>
+    <DataGrid
+      Grid.Row="2"
+      Name="CartGrid"
+      Height="200"
+      VerticalAlignment="Top"
+      ItemsSource="{Binding Cartridges}"
+      AutoGenerateColumns="False"
+      SelectedItem="{Binding SelectedCartridge}"
+      >
+      <DataGrid.ContextMenu>
+        <ContextMenu>
+          <MenuItem Header="Add Cartridge" Command="{Binding AddCartridge}"/>
+          <MenuItem Header="Delete Selected Cartridge" Command="{Binding RemoveCartridge}"/>
+        </ContextMenu>
+      </DataGrid.ContextMenu>
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Name" Binding="{Binding CartridgeName}"/>
+        <DataGridTextColumn Header="Weight" Binding="{Binding Weight}"/>
+        <DataGridTextColumn Header="MV" Binding="{Binding MuzzleVelocity}"/>
+        <DataGridTextColumn Header="BC" Binding="{Binding BallisticCoefficient}"/>
+        <DataGridTextColumn Header="Bullet Length" Binding="{Binding BulletLength}"/>
+        <DataGridTextColumn Header="Calibre" Binding="{Binding Calibre}"/>
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>
