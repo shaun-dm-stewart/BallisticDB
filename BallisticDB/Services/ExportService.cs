@@ -1,8 +1,5 @@
-﻿using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Platform.Storage;
-using BallisticDB.Settings;
+﻿using BallisticDB.Settings;
 using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
