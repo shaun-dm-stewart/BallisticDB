@@ -73,7 +73,7 @@ namespace BallisticDB.Services
             foreach(var rifle in rifles)
             {
                 var ct = string.Empty;
-                var fileName = string.Format("{0}.dbb", rifle);
+                var fileName = string.Format("rifle{0}.dbb", rifle);
                 var cPath = Path.Join(_cartridgePath, fileName);
                 var ctgs = (from c in _cartridges where c.rifleid == rifle select c).ToList();
 
