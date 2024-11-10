@@ -1,4 +1,5 @@
 ﻿using BallisticDB.Services;
+using System.ComponentModel.DataAnnotations;
 
 namespace BallisticDB.ViewModels
 {
@@ -152,6 +153,98 @@ namespace BallisticDB.ViewModels
                 {
                     OnPropertyChanging();
                     _windageClicksPerMOA = value;
+                    switch (RowState)
+                    {
+                        case RowStatus.UNCHANGED:
+                            RowState = RowStatus.UPDATED;
+                            break;
+                        default:
+                            break;
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private double _altitude;
+        public double Altitude
+        {
+            get { return _altitude; }
+            set
+            {
+                if (value != _altitude)
+                {
+                    OnPropertyChanging();
+                    _altitude = value;
+                    switch (RowState)
+                    {
+                        case RowStatus.UNCHANGED:
+                            RowState = RowStatus.UPDATED;
+                            break;
+                        default:
+                            break;
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private double _atmosphericPressure;
+        public double AtmosphericPressure
+        {
+            get { return _atmosphericPressure; }
+            set
+            {
+                if (value != _atmosphericPressure)
+                {
+                    OnPropertyChanging();
+                    _atmosphericPressure = value;
+                    switch (RowState)
+                    {
+                        case RowStatus.UNCHANGED:
+                            RowState = RowStatus.UPDATED;
+                            break;
+                        default:
+                            break;
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private double _temperature;
+        public double Temperature
+        {
+            get { return _temperature; }
+            set
+            {
+                if (value != _temperature)
+                {
+                    OnPropertyChanging();
+                    _temperature = value;
+                    switch (RowState)
+                    {
+                        case RowStatus.UNCHANGED:
+                            RowState = RowStatus.UPDATED;
+                            break;
+                        default:
+                            break;
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private double _relativeHumidity;
+        public double RelativeHumidity
+        {
+            get { return _relativeHumidity; }
+            set
+            {
+                if (value != _relativeHumidity)
+                {
+                    OnPropertyChanging();
+                    _relativeHumidity = value;
                     switch (RowState)
                     {
                         case RowStatus.UNCHANGED:

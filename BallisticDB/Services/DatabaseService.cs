@@ -55,7 +55,7 @@ namespace BallisticDB.Services
 
         public List<RifleViewModel>? LoadRifleRecords()
         {
-            var sql = "SELECT id, desc, sh, tr, zd, ec, wc from Rifle ORDER BY id";
+            var sql = "SELECT id, desc, sh, tr, zd, ec, wc, al, ap, te, rh  from Rifle ORDER BY id";
             _rifles = new List<RifleViewModel>();
             try
             {
@@ -75,6 +75,10 @@ namespace BallisticDB.Services
                                 rifle.ZeroDistance = Convert.ToDouble(rdr["zd"]);
                                 rifle.ElevationClicksPerMOA = Convert.ToDouble(rdr["ec"]);
                                 rifle.WindageClicksPerMOA = Convert.ToDouble(rdr["wc"]);
+                                rifle.Altitude = Convert.ToDouble(rdr["al"]);
+                                rifle.AtmosphericPressure = Convert.ToDouble(rdr["ap"]);
+                                rifle.Temperature = Convert.ToDouble(rdr["te"]);
+                                rifle.RelativeHumidity = Convert.ToDouble(rdr["rh"]);
                                 rifle.RowState = RowStatus.UNCHANGED;
                                 _rifles.Add(rifle);
                             }
@@ -94,7 +98,7 @@ namespace BallisticDB.Services
 
         public List<RifleData>? LoadRifleData()
         {
-            var sql = "SELECT id, desc, sh, tr, zd, ec, wc from Rifle ORDER BY id";
+            var sql = "SELECT id, desc, sh, tr, zd, ec, wc, al, ap, te, rh from Rifle ORDER BY id";
             var rflData = new List<RifleData>();
             try
             {
@@ -114,6 +118,10 @@ namespace BallisticDB.Services
                                 rifle.zd = Convert.ToDouble(rdr["zd"]);
                                 rifle.ec = Convert.ToDouble(rdr["ec"]);
                                 rifle.wc = Convert.ToDouble(rdr["wc"]);
+                                rifle.al = Convert.ToDouble(rdr["al"]);
+                                rifle.ap = Convert.ToDouble(rdr["ap"]);
+                                rifle.te = Convert.ToDouble(rdr["te"]);
+                                rifle.rh = Convert.ToDouble(rdr["rh"]);
                                 rflData.Add(rifle);
                             }
                         }
@@ -266,14 +274,14 @@ namespace BallisticDB.Services
             UpdateCartridges();
             UpdateRifles();
             DeleteCartridges();
-            DeleteRifles();
+            DeleteRifle();
             _unsavedData = false;
         }
 
         private bool InsertRifles()
         {
             var result = 0;
-            var sql = "INSERT INTO Rifle (id, desc, sh, tr, zd, ec, wc ) VALUES (@id, @desc, @sh, @tr, @zd, @ec, @wc)";
+            var sql = "INSERT INTO Rifle (id, desc, sh, tr, zd, ec, wc, al, ap, te, rh ) VALUES (@id, @desc, @sh, @tr, @zd, @ec, @wc, @al, @ap, @te, @rh)";
 
             try
             {
@@ -289,6 +297,10 @@ namespace BallisticDB.Services
                         cmd.Parameters.AddWithValue("@zd", row.ZeroDistance);
                         cmd.Parameters.AddWithValue("@ec", row.ElevationClicksPerMOA);
                         cmd.Parameters.AddWithValue("@wc", row.WindageClicksPerMOA);
+                        cmd.Parameters.AddWithValue("@al", row.Altitude);
+                        cmd.Parameters.AddWithValue("@ap", row.AtmosphericPressure);
+                        cmd.Parameters.AddWithValue("@te", row.Temperature);
+                        cmd.Parameters.AddWithValue("@rh", row.RelativeHumidity);
                         result = cmd.ExecuteNonQuery();
                         if ((result > 0) == false)
                         {
@@ -344,7 +356,7 @@ namespace BallisticDB.Services
         private bool UpdateRifles()
         {
             var result = 0;
-            var sql = "UPDATE Rifle SET desc = @desc, sh = @sh, tr = @tr, zd = @zd, ec = @ec, wc = @wc WHERE id = @id";
+            var sql = "UPDATE Rifle SET desc = @desc, sh = @sh, tr = @tr, zd = @zd, ec = @ec, wc = @wc, al = @al, ap = @ap, te = @te, rh = @rh WHERE id = @id";
 
             try
             {
@@ -360,6 +372,10 @@ namespace BallisticDB.Services
                         cmd.Parameters.AddWithValue("@zd", row.ZeroDistance);
                         cmd.Parameters.AddWithValue("@ec", row.ElevationClicksPerMOA);
                         cmd.Parameters.AddWithValue("@wc", row.WindageClicksPerMOA);
+                        cmd.Parameters.AddWithValue("@al", row.Altitude);
+                        cmd.Parameters.AddWithValue("@ap", row.AtmosphericPressure);
+                        cmd.Parameters.AddWithValue("@te", row.Temperature);
+                        cmd.Parameters.AddWithValue("@rh", row.RelativeHumidity);
                         result = cmd.ExecuteNonQuery();
                         if ((result > 0) == false)
                         {
@@ -442,7 +458,7 @@ namespace BallisticDB.Services
             return true;
         }
 
-        private bool DeleteRifles()
+        private bool DeleteRifle()
         {
             var result = 0;
             var sql = "DELETE FROM Rifle WHERE id = @id";

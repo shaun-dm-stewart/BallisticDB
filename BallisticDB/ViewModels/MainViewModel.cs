@@ -1,5 +1,4 @@
-﻿using BallisticDB.Messages;
-using BallisticDB.Services;
+﻿using BallisticDB.Services;
 using BallisticDB.Settings;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -98,11 +97,14 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     internal void AddCartridge()
     {
-        var c = new CartridgeViewModel();
-        c.RifleId = SelectedRifle.RifleId;
-        c.CartridgeName = "New";
-        _dbService.AddCartridge(c);
-        Cartridges.Add(c);
+        if (SelectedRifle != null)
+        {
+            var c = new CartridgeViewModel();
+            c.RifleId = SelectedRifle.RifleId;
+            c.CartridgeName = "New";
+            _dbService.AddCartridge(c);
+            Cartridges.Add(c);
+        }
     }
 
     [RelayCommand]

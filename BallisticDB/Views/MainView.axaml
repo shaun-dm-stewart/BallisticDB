@@ -12,6 +12,11 @@
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
     <vm:MainViewModel />
   </Design.DataContext>
+  <UserControl.Styles>
+    <Style Selector="DataGrid TextBox">
+      <Setter Property="MaxLength" Value="20"/>
+    </Style>
+  </UserControl.Styles>
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="auto"/>
@@ -48,8 +53,24 @@
         <DataGridTextColumn Header="Scope Height" Binding="{Binding ScopeHeight}"/>
         <DataGridTextColumn Header="Twist Rate" Binding="{Binding TwistRate}"/>
         <DataGridTextColumn Header="Zero Distance" Binding="{Binding ZeroDistance}"/>
-        <DataGridTextColumn Header="Elevation clicks per MOA" Binding="{Binding ElevationClicksPerMOA}"/>
-        <DataGridTextColumn Header="Windage clicks per MOA" Binding="{Binding WindageClicksPerMOA}"/>
+        <DataGridTextColumn Binding="{Binding ElevationClicksPerMOA}">
+          <DataGridTextColumn.HeaderTemplate>
+            <DataTemplate>
+              <Label Content="Vert clicks" ToolTip.Tip="Elevation clicks per MOA"/>
+            </DataTemplate>
+          </DataGridTextColumn.HeaderTemplate>
+        </DataGridTextColumn>
+        <DataGridTextColumn Binding="{Binding WindageClicksPerMOA}">
+          <DataGridTextColumn.HeaderTemplate>
+            <DataTemplate>
+              <Label Content="Horiz clicks" ToolTip.Tip="Windage clicks per MOA"/>
+            </DataTemplate>
+          </DataGridTextColumn.HeaderTemplate>
+        </DataGridTextColumn>
+        <DataGridTextColumn Header="Altitude" Binding="{Binding Altitude}"/>
+        <DataGridTextColumn Header="Air Pressure" Binding="{Binding AtmosphericPressure}"/>
+        <DataGridTextColumn Header="Temperature" Binding="{Binding Temperature}"/>
+        <DataGridTextColumn Header="Relative Humidiity" Binding="{Binding RelativeHumidity}"/>
       </DataGrid.Columns>
     </DataGrid>
     <DataGrid
@@ -72,8 +93,20 @@
         <DataGridTextColumn Header="Weight" Binding="{Binding Weight}"/>
         <DataGridTextColumn Header="MV" Binding="{Binding MuzzleVelocity}"/>
         <DataGridTextColumn Header="BC" Binding="{Binding BallisticCoefficient}"/>
-        <DataGridTextColumn Header="Bullet Length" Binding="{Binding BulletLength}"/>
-        <DataGridTextColumn Header="Calibre" Binding="{Binding Calibre}"/>
+        <DataGridTextColumn Binding="{Binding BulletLength}">
+          <DataGridTextColumn.HeaderTemplate>
+            <DataTemplate>
+              <Label Content="Length" ToolTip.Tip="The bullet length for stability calculations"/>
+            </DataTemplate>
+          </DataGridTextColumn.HeaderTemplate>
+        </DataGridTextColumn>
+        <DataGridTextColumn Header="Calibre" Binding="{Binding Calibre}">
+          <DataGridTextColumn.HeaderTemplate>
+            <DataTemplate>
+              <Label Content="Calibre" ToolTip.Tip="The actual bullet dianeter"/>
+            </DataTemplate>
+          </DataGridTextColumn.HeaderTemplate>
+        </DataGridTextColumn>
       </DataGrid.Columns>
     </DataGrid>
   </Grid>
