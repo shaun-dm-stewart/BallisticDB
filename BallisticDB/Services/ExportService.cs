@@ -10,8 +10,8 @@ namespace BallisticDB.Services
 {
     public class ExportService
     {
-        private const int RIFLERECORDLENGTH = 150;
-        private const int CARTRECORDLENGTH = 100;
+        private const int RIFLERECORDLENGTH = 151;
+        private const int CARTRECORDLENGTH = 101;
         private string _rifleFileName;
         private string _riflePath;
         private string _cartridgePath;
