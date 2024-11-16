@@ -19,7 +19,6 @@ namespace BallisticDB.Services
         private long _maxCartridgeId = 0;
         private List<RifleViewModel>? _rifles;
         private List<CartridgeViewModel>? _cartridges;
-        private bool _unsavedData = false;
 
         public DatabaseService(IOptions<AppSettings> appSettings)
         {
@@ -27,10 +26,6 @@ namespace BallisticDB.Services
                 + "\\" + appSettings.Value.DbName
                 + ";";
             _cartridges = new List<CartridgeViewModel>();
-            WeakReferenceMessenger.Default.Register<DataChangedMessage>(this, (r, m) =>
-            {
-                _unsavedData = true;
-            });
         }
 
         public bool OpenDatabase(bool create = true, bool overWrite = false)
@@ -67,19 +62,20 @@ namespace BallisticDB.Services
                         {
                             while (rdr.Read())
                             {
-                                var rifle = new RifleViewModel();
-                                rifle.RifleId = Convert.ToInt32(rdr["id"]);
-                                rifle.RifleName = Convert.ToString(rdr["desc"]);
-                                rifle.ScopeHeight = Convert.ToDouble(rdr["sh"]);
-                                rifle.TwistRate = Convert.ToDouble(rdr["tr"]);
-                                rifle.ZeroDistance = Convert.ToDouble(rdr["zd"]);
-                                rifle.ElevationClicksPerMOA = Convert.ToDouble(rdr["ec"]);
-                                rifle.WindageClicksPerMOA = Convert.ToDouble(rdr["wc"]);
-                                rifle.Altitude = Convert.ToDouble(rdr["al"]);
-                                rifle.AtmosphericPressure = Convert.ToDouble(rdr["ap"]);
-                                rifle.Temperature = Convert.ToDouble(rdr["te"]);
-                                rifle.RelativeHumidity = Convert.ToDouble(rdr["rh"]);
-                                rifle.RowState = RowStatus.UNCHANGED;
+                                var rifle = new RifleViewModel
+                                (
+                                    Convert.ToInt32(rdr["id"]),
+                                    Convert.ToString(rdr["desc"]),
+                                    Convert.ToDouble(rdr["sh"]),
+                                    Convert.ToDouble(rdr["tr"]),
+                                    Convert.ToDouble(rdr["zd"]),
+                                    Convert.ToDouble(rdr["ec"]),
+                                    Convert.ToDouble(rdr["wc"]),
+                                    Convert.ToDouble(rdr["al"]),
+                                    Convert.ToDouble(rdr["ap"]),
+                                    Convert.ToDouble(rdr["te"]),
+                                    Convert.ToDouble(rdr["rh"])
+                                );
                                 _rifles.Add(rifle);
                             }
                         }
@@ -87,7 +83,6 @@ namespace BallisticDB.Services
                 }
                 _maxRifleId = (_rifles.Count == 0 ? 0 : _rifles.Max(p => p.RifleId));
                 LoadCartridgeRecords();
-                _unsavedData = false;
             }
             catch (Exception ex)
             {
@@ -135,6 +130,43 @@ namespace BallisticDB.Services
             return rflData;
         }
 
+        public List<CartridgeViewModel> LoadCartridgeRecords()
+        {
+            var sql = "SELECT id, rifleid, desc, wt, mv, bc, bl, clbr from Cartridge ORDER BY rifleid, id";
+            _cartridges = new List<CartridgeViewModel>();
+            try
+            {
+                using (var cmd = new SqliteCommand(sql, _con))
+                {
+                    using (var rdr = cmd.ExecuteReader())
+                    {
+                        if (rdr.HasRows)
+                        {
+                            while (rdr.Read())
+                            {
+                                var cartridge = new CartridgeViewModel(
+                                    Convert.ToInt64(rdr["rifleid"]),
+                                Convert.ToInt64(rdr["id"]),
+                                Convert.ToString(rdr["desc"]),
+                                Convert.ToInt32(rdr["wt"]),
+                                Convert.ToInt32(rdr["mv"]),
+                                Convert.ToDouble(rdr["bc"]),
+                                Convert.ToDouble(rdr["bl"]),
+                                Convert.ToDouble(rdr["clbr"])
+                                );
+                                _cartridges.Add(cartridge);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return _cartridges;
+        }
+
         public List<CartridgeData> LoadCartridgeData()
         {
             var sql = "SELECT id, rifleid, desc, wt, mv, bc, bl, clbr from Cartridge ORDER BY rifleid, id";
@@ -159,7 +191,7 @@ namespace BallisticDB.Services
                                 cartridge.bl = Convert.ToDouble(rdr["bl"]);
                                 cartridge.clbr = Convert.ToDouble(rdr["clbr"]);
                                 crtdgs.Add(cartridge);
-                            }
+                             }
                         }
                     }
                 }
@@ -218,43 +250,6 @@ namespace BallisticDB.Services
             return result;
         }
 
-        public List<CartridgeViewModel> LoadCartridgeRecords()
-        {
-            var sql = "SELECT id, rifleid, desc, wt, mv, bc, bl, clbr from Cartridge ORDER BY rifleid, id";
-            _cartridges = new List<CartridgeViewModel>();
-            try
-            {
-                using (var cmd = new SqliteCommand(sql, _con))
-                {
-                    using (var rdr = cmd.ExecuteReader())
-                    {
-                        if (rdr.HasRows)
-                        {
-                            while (rdr.Read())
-                            {
-                                var cartridge = new CartridgeViewModel();
-                                cartridge.CartridgeId = Convert.ToInt64(rdr["id"]);
-                                cartridge.RifleId = Convert.ToInt64(rdr["rifleid"]);
-                                cartridge.CartridgeName = Convert.ToString(rdr["desc"]);
-                                cartridge.Weight = Convert.ToDouble(rdr["wt"]);
-                                cartridge.MuzzleVelocity = Convert.ToDouble(rdr["mv"]);
-                                cartridge.BallisticCoefficient = Convert.ToDouble(rdr["bc"]);
-                                cartridge.BulletLength = Convert.ToDouble(rdr["bl"]);
-                                cartridge.Calibre = Convert.ToDouble(rdr["clbr"]);
-                                cartridge.RowState = RowStatus.UNCHANGED;
-                                _cartridges.Add(cartridge);
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return _cartridges;
-        }
-
         public List<CartridgeViewModel> GetCartridgesByRifleId(RifleViewModel rifle)
         {
             long rID = 0;
@@ -275,7 +270,7 @@ namespace BallisticDB.Services
             UpdateRifles();
             DeleteCartridges();
             DeleteRifle();
-            _unsavedData = false;
+            WeakReferenceMessenger.Default.Send(new DataChangedMessage(new DataStatus(false, "Data saved to database")));
         }
 
         private bool InsertRifles()

@@ -6,6 +6,30 @@ namespace BallisticDB.ViewModels
 {
     public class CartridgeViewModel : ViewModelBase
     {
+        public CartridgeViewModel()
+        {
+        }
+
+        public CartridgeViewModel(long rifleId
+            , long cartridgeId
+            , string cartridgeName
+            , double weight
+            , double muzzleVelocity
+            , double ballisticCoefficient
+            , double bulletLength
+            , double calibre
+        )
+        {
+            _rifleId = rifleId;
+            _cartridgeId = cartridgeId;
+            _cartridgeName = cartridgeName;
+            _weight = weight;
+            _muzzleVelocity = muzzleVelocity;
+            _ballisticCoefficient = ballisticCoefficient;
+            _bulletLength = bulletLength;
+            _calibre = calibre;
+        }
+
         private long _rifleId;
         public long RifleId
         {
@@ -25,21 +49,21 @@ namespace BallisticDB.ViewModels
                             break;
                     }
                     OnPropertyChanged();
-                    WeakReferenceMessenger.Default.Send(new DataChangedMessage("Rifle Id updated"));
+                    SendDataChangedMessage("Cartridge rifle Id updated");
                 }
             }
         }
 
-        private long _cartridge;
+        private long _cartridgeId;
         public long CartridgeId
         {
-            get { return _cartridge; }
+            get { return _cartridgeId; }
             set
             {
-                if (value != _cartridge)
+                if (value != _cartridgeId)
                 {
                     OnPropertyChanging();
-                    _cartridge = value;
+                    _cartridgeId = value;
                     switch (RowState)
                     {
                         case RowStatus.UNCHANGED:
@@ -49,7 +73,7 @@ namespace BallisticDB.ViewModels
                             break;
                     }
                     OnPropertyChanged();
-                    WeakReferenceMessenger.Default.Send(new DataChangedMessage("Cartridge Id updated"));
+                    SendDataChangedMessage("Cartridge Id updated");
                 }
             }
         }
@@ -73,7 +97,7 @@ namespace BallisticDB.ViewModels
                             break;
                     }
                     OnPropertyChanged();
-                    WeakReferenceMessenger.Default.Send(new DataChangedMessage("Cartridge name updated"));
+                    SendDataChangedMessage("Cartridge name updated");
                 }
             }
         }
@@ -97,7 +121,7 @@ namespace BallisticDB.ViewModels
                             break;
                     }
                     OnPropertyChanged();
-                    WeakReferenceMessenger.Default.Send(new DataChangedMessage("Cartridge weight updated"));
+                    SendDataChangedMessage("Cartridge weight updated");
                 }
             }
         }
@@ -121,7 +145,7 @@ namespace BallisticDB.ViewModels
                             break;
                     }
                     OnPropertyChanged();
-                    WeakReferenceMessenger.Default.Send(new DataChangedMessage("Cartridge mv updated"));
+                    SendDataChangedMessage("Cartridge mv updated");
                 }
             }
         }
@@ -145,8 +169,7 @@ namespace BallisticDB.ViewModels
                             break;
                     }
                     OnPropertyChanged();
-                    WeakReferenceMessenger.Default.Send(new DataChangedMessage("Cartridge bc updated"));
-
+                    SendDataChangedMessage("Cartridge bc updated");
                 }
             }
         }
@@ -170,7 +193,7 @@ namespace BallisticDB.ViewModels
                             break;
                     }
                     OnPropertyChanged();
-                    WeakReferenceMessenger.Default.Send(new DataChangedMessage("Cartridge bc updated"));
+                    SendDataChangedMessage("Cartridge bc updated");
                 }
             }
         }
@@ -194,11 +217,16 @@ namespace BallisticDB.ViewModels
                             break;
                     }
                     OnPropertyChanged();
-                    WeakReferenceMessenger.Default.Send(new DataChangedMessage("Cartridge bc updated"));
+                    SendDataChangedMessage("Cartridge calibre updated");
                 }
             }
         }
 
         public RowStatus RowState { get; set; } = RowStatus.UNCHANGED;
+
+        private void SendDataChangedMessage(string msg)
+        {
+            WeakReferenceMessenger.Default.Send(new DataChangedMessage(new DataStatus(false, msg)));
+        }
     }
 }

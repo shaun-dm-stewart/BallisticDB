@@ -1,10 +1,41 @@
 ﻿using BallisticDB.Services;
-using System.ComponentModel.DataAnnotations;
+using BallisticDB.Messages;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace BallisticDB.ViewModels
 {
     public class RifleViewModel : ViewModelBase
     {
+        public RifleViewModel() { }
+
+        public RifleViewModel
+        (
+            long rifleId
+            , string rifleName
+            , double scopeHeight
+            , double twistRate
+            , double zeroDistance
+            , double elevationClicksPerMOA
+            , double windageClicksPerMOA
+            , double altitude
+            , double atmosphericPressure
+            , double temperature
+            , double relativeHumidity
+        )
+        {
+            _rifleId = rifleId;
+            _rifleName = rifleName;
+            _scopeHeight = scopeHeight;
+            _twistRate = twistRate;
+            _zeroDistance = zeroDistance;
+            _elevationClicksPerMOA = elevationClicksPerMOA;
+            _windageClicksPerMOA = windageClicksPerMOA;
+            _altitude = altitude;
+            _atmosphericPressure = atmosphericPressure;
+            _temperature = temperature;
+            _relativeHumidity = relativeHumidity;
+        }
+
         private long _rifleId;
         public long RifleId
         {
@@ -24,6 +55,7 @@ namespace BallisticDB.ViewModels
                             break;
                     }
                     OnPropertyChanged();
+                    SendDataChangedMessage("Rifle id updated");
                 }
             }
         }
@@ -47,6 +79,7 @@ namespace BallisticDB.ViewModels
                             break;
                     }
                     OnPropertyChanged();
+                    SendDataChangedMessage("Rifle name updated");
                 }
             }
         }
@@ -70,6 +103,7 @@ namespace BallisticDB.ViewModels
                             break;
                     }
                     OnPropertyChanged();
+                    SendDataChangedMessage("Rifle scope height updated");
                 }
             }
         }
@@ -93,6 +127,7 @@ namespace BallisticDB.ViewModels
                             break;
                     }
                     OnPropertyChanged();
+                    SendDataChangedMessage("Rifle twist rate updated");
                 }
             }
         }
@@ -116,6 +151,7 @@ namespace BallisticDB.ViewModels
                             break;
                     }
                     OnPropertyChanged();
+                    SendDataChangedMessage("Rifle zero distance updated");
                 }
             }
         }
@@ -139,6 +175,7 @@ namespace BallisticDB.ViewModels
                             break;
                     }
                     OnPropertyChanged();
+                    SendDataChangedMessage("Elevation clicks per MOA updated");
                 }
             }
         }
@@ -162,6 +199,7 @@ namespace BallisticDB.ViewModels
                             break;
                     }
                     OnPropertyChanged();
+                    SendDataChangedMessage("Windage clicks per MOA updated");
                 }
             }
         }
@@ -185,6 +223,7 @@ namespace BallisticDB.ViewModels
                             break;
                     }
                     OnPropertyChanged();
+                    SendDataChangedMessage("Altitude updated");
                 }
             }
         }
@@ -208,6 +247,7 @@ namespace BallisticDB.ViewModels
                             break;
                     }
                     OnPropertyChanged();
+                    SendDataChangedMessage("Atmospheric pressure updated");
                 }
             }
         }
@@ -231,6 +271,7 @@ namespace BallisticDB.ViewModels
                             break;
                     }
                     OnPropertyChanged();
+                    SendDataChangedMessage("Temperature updated");
                 }
             }
         }
@@ -254,11 +295,16 @@ namespace BallisticDB.ViewModels
                             break;
                     }
                     OnPropertyChanged();
+                    SendDataChangedMessage("Relative Humidity updated");
                 }
             }
         }
 
         public RowStatus RowState { get; set; } = RowStatus.UNCHANGED;
 
+        private void SendDataChangedMessage(string msg)
+        {
+            WeakReferenceMessenger.Default.Send(new DataChangedMessage(new DataStatus(false, msg)));
+        }
     }
 }

@@ -1,7 +1,9 @@
-﻿using BallisticDB.Services;
+﻿using BallisticDB.Messages;
+using BallisticDB.Services;
 using BallisticDB.Settings;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -112,23 +114,5 @@ public partial class MainViewModel : ViewModelBase
     {
         _dbService.DeleteCartridge(SelectedCartridge);
         Cartridges.Remove(SelectedCartridge);
-    }
-
-    bool FilterCartridges(object obj)
-    {
-        if (obj is CartridgeViewModel ct)
-        {
-            return ct.RifleId == _selectedRifle.RifleId && ct.RowState != RowStatus.DELETED;
-        }
-        return false;
-    }
-
-    bool FilterRifles(object obj)
-    {
-        if (obj is RifleViewModel rfl)
-        {
-            return rfl.RowState != RowStatus.DELETED;
-        }
-        return false;
     }
 }

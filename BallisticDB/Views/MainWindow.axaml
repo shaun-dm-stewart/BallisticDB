@@ -8,5 +8,6 @@
         x:Class="BallisticDB.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="Ballistics DB">
-  <views:MainView x:Name="tit"/>
+        
+  <views:MainView x:Name="main"/>
 </Window>

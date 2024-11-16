@@ -2,9 +2,9 @@
 
 namespace BallisticDB.Messages
 {
-    public class DataChangedMessage : ValueChangedMessage<string>
+    public class DataChangedMessage : ValueChangedMessage<DataStatus>
     {
-        public DataChangedMessage(string msg) : base(msg)
+        public DataChangedMessage(DataStatus msg) : base(msg)
         {
         }
     }
