@@ -304,7 +304,7 @@ namespace BallisticDB.ViewModels
 
         private void SendDataChangedMessage(string msg)
         {
-            WeakReferenceMessenger.Default.Send(new DataChangedMessage(new DataStatus(false, msg)));
+            WeakReferenceMessenger.Default.Send(new DataChangedMessage(new DataStatus(true, msg)));
         }
     }
 }

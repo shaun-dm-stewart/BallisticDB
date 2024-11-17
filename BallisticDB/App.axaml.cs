@@ -56,7 +56,6 @@ public partial class App : Application
     {
         services.Configure<AppSettings>(Configuration.GetSection(nameof(AppSettings)));
         services.AddSingleton<MainWindow>();
-        services.AddSingleton<Dialog>();
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<DatabaseService>();
         services.AddSingleton<ExportService>();

@@ -46,16 +46,12 @@ public partial class MainViewModel : ViewModelBase
         Rifles = new ObservableCollection<RifleViewModel>(LoadRifles());
         Cartridges = new ObservableCollection<CartridgeViewModel>();
         _dbService.CloseDatabase();
+        SendDataChangedMessage(false, "Database loaded");
     }
 
     private List<RifleViewModel> LoadRifles()
     {
         return _dbService.LoadRifleRecords();
-    }
-
-    private List<CartridgeViewModel>LoadCartridges()
-    {
-        return _dbService.GetCartridgesByRifleId(SelectedRifle);
     }
 
     partial void OnSelectedRifleChanged(RifleViewModel? value)
@@ -114,5 +110,10 @@ public partial class MainViewModel : ViewModelBase
     {
         _dbService.DeleteCartridge(SelectedCartridge);
         Cartridges.Remove(SelectedCartridge);
+    }
+
+    private void SendDataChangedMessage( bool state, string msg)
+    {
+        WeakReferenceMessenger.Default.Send(new DataChangedMessage(new DataStatus(state, msg)));
     }
 }
